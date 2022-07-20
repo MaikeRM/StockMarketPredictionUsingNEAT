@@ -12,7 +12,7 @@ import visualize
 
 reporter = neat.StdOutReporter(True)
 stats = neat.StatisticsReporter()
-attributes = ('Open', 'High', 'Low', 'Close', 'Adjusted Close', 'Exchange')
+attributes = ('Open', 'High', 'Low', 'Close', 'Adj Close')
 days = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri')
 # node_names = {-1: attributes[0], -2: attributes[1], -3: attributes[2], -4: attributes[3], -5: attributes[4],
 #              -6: attributes[5], -7: attributes[6], -8: days[0], -9: days[1], -10: days[2], -11: days[3], -12: days[4],
@@ -32,7 +32,6 @@ def eval_genomes(genomes, config):
             cost += (predicted_output[0] - y_train[index]) ** 2
         genome.fitness = -cost
     try:
-        pass
         gen = reporter.generation - 1
         if gen > 0:
             visualize.draw_net(config=config, genome=stats.best_genome(), view=False)
@@ -40,7 +39,7 @@ def eval_genomes(genomes, config):
             pastslog.post('+1 stdev', value=stats.get_fitness_mean()[gen] + stats.get_fitness_stdev()[gen], step=gen)
             pastslog.post('avg', value=stats.get_fitness_mean()[gen], step=gen)
             pastslog.post('-1 stdev', value=stats.get_fitness_mean()[gen] - stats.get_fitness_stdev()[gen], step=gen)
-    except:
+    except Exception:
         print('\npastalog error!\n')
 
 

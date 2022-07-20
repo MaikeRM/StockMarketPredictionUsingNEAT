@@ -6,7 +6,7 @@ from math import floor
 
 import matplotlib.pyplot as plt
 import pandas as pd
-import quandl
+import yfinance
 
 
 def retrieve(from_date='1999-02-01', to_date='2017-04-28'):
@@ -28,13 +28,11 @@ def retrieve(from_date='1999-02-01', to_date='2017-04-28'):
             time.strptime(to_date, '%Y-%m-%d')
         except ValueError:
             print('Invalid date(s)!\nThe dates should be string and the format should be yyyy-mm-dd\n\n'
-                  'Using default values (from_date = 2003-07-14, to_date = 2017-02-19\n')
+                'Using default values (from_date = 2003-07-14, to_date = 2017-02-19\n')
             from_date = '2003-07-14'
-            to_date = '2017-03-05'
+            to_date = '2022-07-18'
 
-        print('\nRetrieving data from quandl...')
-
-        api_key = open('quandl_api_key.txt', 'r').read()  # the api key is stored as plain text in quandl_api_key.txt
+        print('\nRetrieving data from yfinance...')
 
         # sensex = quandl.get('YAHOO/INDEX_BSESN', authtoken=api_key, start_date=from_date, end_date=to_date)
         # exchange = quandl.get('FRED/DEXINUS', authtoken=api_key, start_date=from_date, end_date=to_date)
@@ -44,7 +42,7 @@ def retrieve(from_date='1999-02-01', to_date='2017-04-28'):
         # data.fillna(method='pad', inplace=True)  # filling missing values with previous values
         # data = data.drop('Volume', axis=1)  # dropping volume
 
-        data = quandl.get('BSE/BSE500', authtoken=api_key, start_date=from_date, end_date=to_date)
+        data = yfinance.download('PETR4.SA', start=from_date, end=to_date)
         del data['Open'], data['High'], data['Low']
 
         print('\nCaching data...')
@@ -71,7 +69,7 @@ def split(data, train_size):
     :param train_size: Percentage of data which is training.
     :return: Tuple containing training and testing data.
     """
-    train_data = data.iloc[0:floor(train_size * len(data))]
+    train_data = data.iloc[:floor(train_size * len(data))]
     test_data = data.iloc[floor(train_size * len(data)):]
 
     return train_data, test_data
